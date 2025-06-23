@@ -48,21 +48,63 @@
 
 ## 🚀 Getting Started
 
-To run this project locally:
+To run this project locally, follow these steps:
 
 ### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/yourusername/mediclaim.git
 cd mediclaim
+````
 
 ### 2. Set Up Virtual Environment
 
 ```bash
 python -m venv venv
 source venv/bin/activate       # On Windows: venv\Scripts\activate
+```
 
 ### 3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
+```
+
+### 4. Configure Environment Variables
+
+Create a `.env` file in the root directory and add the following:
+
+```env
+INFURA_URL=<your_infura_or_rpc_url>
+PRIVATE_KEY=<your_ethereum_account_private_key>
+CONTRACT_ADDRESS=<your_deployed_smart_contract_address>
+```
+
+### 5. Start the Flask Backend
+
+```bash
+python backend/app.py
+```
+
+---
+
+### ✅ Notes
+
+* Make sure Python 3.7 or above is installed.
+* If using environment variables via `.env`, install `python-dotenv`:
+
+  ```bash
+  pip install python-dotenv
+  ```
+* To exit the virtual environment at any time, run:
+
+  ```bash
+  deactivate
+  ```
+
+
+### 🤝 Contributing
+
+Contributions are welcome! Fork the repo, make your changes, and submit a pull request.
+
+
