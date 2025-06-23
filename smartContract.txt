@@ -1,0 +1,97 @@
+the following contract has to be compiled in remix.ide
+the abi has to be loaded in abi_contract.json
+the contract address has to be added to config.py
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract InsuranceClaimProcessor {
+    address public insurer;
+
+    struct Claim {
+        address patient;
+        address hospital;
+        string ipfsHash;
+        bool patientApproved;
+        bool approved;
+        bool paid;
+        string reimbursementMessage;
+    }
+
+    mapping(string => Claim) public claims;
+
+    event ClaimSubmitted(string claimId, address patient, address hospital, string ipfsHash);
+    event ClaimPatientApproved(string claimId);
+    event ClaimApproved(string claimId);
+    event ClaimPaid(string claimId, string reimbursementMessage);
+
+    constructor(address _insurer) {
+        insurer = _insurer;
+    }
+
+    function submitClaim(string memory claimId, address patient, address hospital, string memory ipfsHash) public {
+        require(claims[claimId].patient == address(0), "Claim already exists");
+
+        claims[claimId] = Claim({
+            patient: patient,
+            hospital: hospital,
+            ipfsHash: ipfsHash,
+            patientApproved: false,
+            approved: false,
+            paid: false,
+            reimbursementMessage: ""
+        });
+
+        emit ClaimSubmitted(claimId, patient, hospital, ipfsHash);
+    }
+
+    function approveClaimByPatient(string memory claimId) public {
+        Claim storage claim = claims[claimId];
+        require(msg.sender == claim.patient, "Only patient can approve");
+        require(claim.patient != address(0), "Claim does not exist");
+
+        claim.patientApproved = true;
+        emit ClaimPatientApproved(claimId);
+    }
+
+    function approveClaim(string memory claimId) public {
+        Claim storage claim = claims[claimId];
+        require(msg.sender == insurer, "Only insurer can approve");
+        require(claim.patientApproved, "Patient must approve the claim first");
+
+        claim.approved = true;
+        emit ClaimApproved(claimId);
+    }
+
+    function markAsPaid(string memory claimId, string memory reimbursementMessage) public {
+        Claim storage claim = claims[claimId];
+        require(msg.sender == insurer, "Only insurer can mark as paid");
+        require(claim.approved, "Claim must be approved first");
+
+        claim.paid = true;
+        claim.reimbursementMessage = reimbursementMessage;
+
+        emit ClaimPaid(claimId, reimbursementMessage);
+    }
+
+    function getClaim(string memory claimId) public view returns (
+        address patient,
+        address hospital,
+        string memory ipfsHash,
+        bool patientApproved,
+        bool approved,
+        bool paid,
+        string memory reimbursementMessage
+    ) {
+        Claim memory claim = claims[claimId];
+        return (
+            claim.patient,
+            claim.hospital,
+            claim.ipfsHash,
+            claim.patientApproved,
+            claim.approved,
+            claim.paid,
+            claim.reimbursementMessage
+        );
+    }
+}

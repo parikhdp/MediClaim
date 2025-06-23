@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital - Submit Claim</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.11/web3.min.js"></script>
+</head>
+<body>
+    <h3>Submit a Claim</h3>
+    <form id="hospital-form">
+        <label for="patient-address">Patient Address:</label>
+        <input type="text" id="patient-address" required><br><br>
+
+        <label for="hospital-address">Hospital Address:</label>
+        <input type="text" id="hospital-address" required><br><br>
+
+        <label for="encrypted-treatment-data">Treatment Data (Encrypted, CID):</label>
+        <input type="text" id="encrypted-treatment-data" required><br><br>
+
+        <button type="submit">Submit Claim</button>
+    </form>
+
+    <script>
+        // Web3 setup to interact with Ethereum blockchain (MetaMask)
+        const web3 = new Web3(window.ethereum);
+        window.ethereum.enable();  // Enable MetaMask connection
+
+        const contractABI = [...];  // Contract ABI (Paste the ABI here)
+        const contractAddress = "0xYourContractAddress";  // Your contract address
+
+        const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+        document.getElementById("hospital-form").addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const patientAddress = document.getElementById("patient-address").value;
+            const hospitalAddress = document.getElementById("hospital-address").value;
+            const encryptedTreatmentData = document.getElementById("encrypted-treatment-data").value;
+
+            const accounts = await web3.eth.getAccounts();
+
+            // Submit the claim to the contract
+            contract.methods.submitClaim(patientAddress, hospitalAddress, encryptedTreatmentData)
+                .send({ from: accounts[0] })
+                .on('transactionHash', (hash) => {
+                    alert(`Claim submitted successfully! Transaction Hash: ${hash}`);
+                })
+                .on('error', (error) => {
+                    alert(`Error submitting claim: ${error.message}`);
+                });
+        });
+    </script>
+</body>
+</html>
