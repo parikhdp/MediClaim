@@ -27,16 +27,6 @@
 
 ---
 
-## 📚 What You'll Learn  
-- How to implement **homomorphic encryption** using TenSEAL  
-- Interfacing **smart contracts** with a Python backend  
-- Building a decentralized app (dApp) using **IPFS** and **Web3**  
-- Designing multi-role claim approval flows  
-- Encrypting data and computing over encrypted values  
-- Securing sensitive medical data without sacrificing usability  
-
----
-
 ## 🧪 Project Highlights  
 - End-to-end **decentralized medical claim flow** involving hospital, patient, and insurer  
 - **Encrypted cost storage** using IPFS with smart contract-based validation  
